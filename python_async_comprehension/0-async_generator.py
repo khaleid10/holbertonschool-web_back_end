@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Async generator."""
+"""Contains an asynchronous generator."""
 
 import asyncio
 import random
