@@ -1,2 +1,2 @@
-// Insert a school document
-db.school.insertOne({ name: "Holberton school" })
+// Insert a document in school
+db.school.insert({ name: "Holberton school" })
