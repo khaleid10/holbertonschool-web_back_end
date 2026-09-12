@@ -2,6 +2,7 @@
 """Deletion-resilient hypermedia pagination."""
 
 import csv
+import math
 from typing import Dict, List
 
 
@@ -28,6 +29,7 @@ class Server:
         """Return the dataset indexed by sorting position."""
         if self.__indexed_dataset is None:
             dataset = self.dataset()
+            truncated_dataset = dataset[:1000]
             self.__indexed_dataset = {
                 i: dataset[i] for i in range(len(dataset))
             }
@@ -36,24 +38,30 @@ class Server:
 
     def get_hyper_index(self, index: int = None,
                         page_size: int = 10) -> Dict:
-        """Return a deletion-resilient page from the indexed dataset."""
-        dataset = self.indexed_dataset()
+        """Return a deletion-resilient page of indexed data."""
+        if index is None:
+            index = 0
 
-        assert index is not None
-        assert isinstance(index, int)
-        assert 0 <= index < len(dataset)
+        assert type(index) is int
+        assert 0 <= index < len(self.dataset())
+
+        indexed_dataset = self.indexed_dataset()
 
         data = []
         next_index = index
 
-        while len(data) < page_size and next_index < len(self.dataset()):
-            if next_index in dataset:
-                data.append(dataset[next_index])
+        while len(data) < page_size:
+            if next_index >= len(self.dataset()):
+                break
+
+            if next_index in indexed_dataset:
+                data.append(indexed_dataset[next_index])
+
             next_index += 1
 
         return {
             "index": index,
-            "data": data,
-            "page_size": len(data),
-            "next_index": next_index
+            "next_index": next_index,
+            "page_size": page_size,
+            "data": data
         }
