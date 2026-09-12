@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Simple pagination."""
+"""Simple pagination module for a dataset of popular baby names."""
 
 import csv
 import math
@@ -7,10 +7,10 @@ from typing import List
 
 
 def index_range(page: int, page_size: int) -> tuple:
-    """Return the start and end indexes for a pagination page."""
-    start = (page - 1) * page_size
-    end = page * page_size
-    return (start, end)
+    """Return the start and end indexes for pagination."""
+    start_index = (page - 1) * page_size
+    end_index = start_index + page_size
+    return (start_index, end_index)
 
 
 class Server:
@@ -22,7 +22,7 @@ class Server:
         self.__dataset = None
 
     def dataset(self) -> List[List]:
-        """Return the cached dataset of baby names."""
+        """Return the cached dataset of popular baby names."""
         if self.__dataset is None:
             with open(self.DATA_FILE) as f:
                 reader = csv.reader(f)
@@ -33,10 +33,20 @@ class Server:
 
     def get_page(self, page: int = 1,
                  page_size: int = 10) -> List[List]:
-        """Return the requested page of the dataset."""
-        assert type(page) is int and page > 0
-        assert type(page_size) is int and page_size > 0
+        """Return the requested page from the dataset."""
+        assert type(page) is int
+        assert type(page_size) is int
+        assert page > 0
+        assert page_size > 0
 
-        start, end = index_range(page, page_size)
+        start_index, end_index = index_range(page, page_size)
 
-        return self.dataset()[start:end]
+        if (len(self.dataset()) < start_index or
+                len(self.dataset()) < end_index):
+            return []
+
+        data = []
+        for index in range(start_index, end_index):
+            data.append(self.dataset()[index])
+
+        return data

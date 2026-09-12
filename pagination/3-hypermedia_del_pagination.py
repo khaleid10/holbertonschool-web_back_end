@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deletion-resilient hypermedia pagination."""
+"""Deletion-resilient hypermedia pagination module."""
 
 import csv
 import math
@@ -16,7 +16,7 @@ class Server:
         self.__indexed_dataset = None
 
     def dataset(self) -> List[List]:
-        """Return the cached dataset of baby names."""
+        """Return the cached dataset of popular baby names."""
         if self.__dataset is None:
             with open(self.DATA_FILE) as f:
                 reader = csv.reader(f)
@@ -38,30 +38,26 @@ class Server:
 
     def get_hyper_index(self, index: int = None,
                         page_size: int = 10) -> Dict:
-        """Return a deletion-resilient page of indexed data."""
-        if index is None:
-            index = 0
-
+        """Return a deletion-resilient page using dataset indexes."""
         assert type(index) is int
-        assert 0 <= index < len(self.dataset())
+        assert type(page_size) is int
+        assert index >= 0
+        assert index < len(self.indexed_dataset())
 
         indexed_dataset = self.indexed_dataset()
-
         data = []
         next_index = index
 
-        while len(data) < page_size:
-            if next_index >= len(self.dataset()):
-                break
+        for item in range(page_size):
+            while indexed_dataset.get(next_index) is None:
+                next_index += 1
 
-            if next_index in indexed_dataset:
-                data.append(indexed_dataset[next_index])
-
+            data.append(indexed_dataset.get(next_index))
             next_index += 1
 
         return {
             "index": index,
-            "next_index": next_index,
+            "data": data,
             "page_size": page_size,
-            "data": data
+            "next_index": next_index
         }
