@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Simple pagination
-"""
+"""Simple pagination module."""
 
 import csv
 import math
@@ -9,10 +7,10 @@ from typing import List
 
 
 def index_range(page: int, page_size: int) -> tuple:
-    """
-    Return start and end indexes for pagination.
-    """
-    return ((page - 1) * page_size, page * page_size)
+    """Return start and end indexes for pagination."""
+    start = (page - 1) * page_size
+    end = page * page_size
+    return (start, end)
 
 
 class Server:
@@ -36,9 +34,7 @@ class Server:
 
     def get_page(self, page: int = 1,
                  page_size: int = 10) -> List[List]:
-        """
-        Return the requested page from the dataset.
-        """
+        """Return the requested page from the dataset."""
         assert isinstance(page, int) and page > 0
         assert isinstance(page_size, int) and page_size > 0
 
