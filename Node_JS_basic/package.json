@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "dev": "nodemon --exec babel-node --presets @babel/preset-env ./full_server/server.js ./database.csv"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.22.20",
+    "@babel/node": "^7.22.19",
+    "@babel/preset-env": "^7.22.20",
+    "nodemon": "^3.1.14"
+  }
+}
