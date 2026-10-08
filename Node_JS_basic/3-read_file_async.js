@@ -1,4 +1,3 @@
-#!/usr/bin/node
 const fs = require('fs');
 
 function countStudents(path) {
@@ -9,7 +8,7 @@ function countStudents(path) {
         return;
       }
 
-      const lines = data.split('\n').filter((line) => line.trim() !== '');
+      const lines = data.trim().split('\n').filter((line) => line.trim());
       const students = lines.slice(1);
       const fields = {};
 
